@@ -1,6 +1,7 @@
-font pango: FreeSans, Semi-Bold 10
 
 # appearance
+
+font pango: FreeSans, Semi-Bold 10
 
 set $text-color #8ac14f
 set $focused-text-color #e3c136 

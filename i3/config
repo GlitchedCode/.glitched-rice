@@ -368,13 +368,11 @@ mode "$mode_gaps_left" {
 }
 
 # autorun
-#exec_always nvidia-settings --assign "CurrentMetaMode=DPY-4: nvidia-auto-select @1280x1024 +0+0 {ViewPortIn=1280x1024, ViewPortOut=1280x1024+0+0}, DPY-1: nvidia-auto-select @1600x900 +1280+0 {ViewPortIn=1600x900, ViewPortOut=1600x900+0+0}"
-
-exec_always picom --experimental-backends -b
+exec_always picom --experimental-backends -b --config '~/.glitched-rice/picom.conf'
 exec_always conky -c ~/.glitched-rice/current/conky-system
 exec_always --no-startup-id i3-msg 'workspace $ws1; exec ~/.glitched-rice/i3/i3wpd.sh'
 
-exec_always polybar -c ~/.glitched-rice/current/polybar-conf
+exec_always polybar -c ~/.glitched-rice/current/polybar-conf default
 exec --no-startup-id i3-msg 'workspace $ws1; exec spectacle -s'
 exec --no-startup-id setxkbmap -layout it,us
 exec --no-startup-id setxkbmap -option 'grp:shifts_toggle'
