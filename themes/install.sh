@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 if [[ -d ~/.glitched-rice/themes/$1 ]]; then
 	mkdir -p ~/.config/i3
