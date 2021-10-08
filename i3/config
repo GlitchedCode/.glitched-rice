@@ -20,12 +20,7 @@ exec_always--no-startup-id xss-lock --transfer-sleep-lock -- i3lock-fancy --nofo
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 
-# Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -36,10 +31,8 @@ bindsym $mod+Return exec kitty
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
-#bindsym $mod+d exec --no-startup-id dmenu_run
 # A more modern dmenu replacement is rofi:
-bindcode $mod+40 exec rofi -no-lazy-grab -show drun -modi run,drun,window -theme ~/.glitched-rice/current/rofi.rasi 
+bindcode $mod+40 exec --no-startup-id ~/.glitched-rice/run_rofi.sh
 
 # There also is i3-dmenu-desktop which only displays applications shipping a
 # .desktop file. It is a wrapper around dmenu, so you need that installed.
@@ -201,18 +194,13 @@ bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightne
 #bindsym XF86TouchpadToggle exec /usr/bin/toggletouchpad.sh # toggle touchpad
 
 # Media player controls
-#bindsym XF86AudioPlay exec playerctl play
-#bindsym XF86AudioPause exec playerctl pause
-#bindsym XF86AudioNext exec playerctl next
-#bindsym XF86AudioPrev exec playerctl previous
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
 
 # Plasma compatibility improvements
 for_window [window_role="pop-up"] floating enable
-for_window [window_role="task_dialog"] floating enable
-
-for_window [class="yakuake"] floating enable
-for_window [class="systemsettings"] floating enable
-for_window [class="plasmashell"] floating enable;
 for_window [class="Plasma"] floating enable; border none
 for_window [title="plasma-desktop"] floating enable; border none
 for_window [title="win7"] floating enable; border none
@@ -231,7 +219,8 @@ no_focus [class="plasmashell" window_type="notification"]
 #bindsym XF86AudioMicMute exec --no-startup-id qdbus org.kde.kglobalaccel /component/kmix invokeShortcut "mic_mute"
 
 # nvidia bullshit, i fucking hate you nvidia
-exec nvidia-settings --assign "CurrentMetaMode=DPY-3: nvidia-auto-select @1600x900 +1280+0 {ViewPortIn=1600x900, ViewPortOut=1600x900+0+0, ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}, DPY-4: nvidia-auto-select @1280x1024 +0+0 {ViewPortIn=1280x1024, ViewPortOut=1280x1024+0+0, ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}"
+exec nvidia-settings --assign "CurrentMetaMode=DPY-4: nvidia-auto-select @1280x1024 +0+0 {ViewPortIn=1280x1024, ViewPortOut=1280x1024+0+0}, DPY-6: nvidia-auto-select @1600x900 +1280+0 {ViewPortIn=1600x900, ViewPortOut=1600x900+0+0, ForceCompositionPipeline=On, ForceFullCompositionPipeline=O}"
+
 # custom config
 for_window [title="Desktop — Plasma"] kill; floating enable; border none
 bindsym $mod+control+l exec loginctl lock-session
@@ -281,6 +270,11 @@ mode "$mode_gaps_outer" {
 
         bindsym Return mode "$mode_gaps"
         bindsym Escape mode "default"
+}
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 5
+        bindsym minus gaps inner current minus 5
+        bindsym 0     gaps inner current set 0
 }
 mode "$mode_gaps_inner" {
         bindsym plus  gaps inner current plus 5
@@ -368,11 +362,9 @@ mode "$mode_gaps_left" {
 }
 
 # autorun
-exec_always picom --experimental-backends -b --config '~/.glitched-rice/picom.conf'
+exec_always picom --experimental-backends -b --config ~/.glitched-rice/picom.conf
 exec_always conky -c ~/.glitched-rice/current/conky-system
 exec_always --no-startup-id i3-msg 'workspace $ws1; exec ~/.glitched-rice/i3/i3wpd.sh'
 
 exec_always polybar -c ~/.glitched-rice/current/polybar-conf default
 exec --no-startup-id i3-msg 'workspace $ws1; exec spectacle -s'
-exec --no-startup-id setxkbmap -layout it,us
-exec --no-startup-id setxkbmap -option 'grp:shifts_toggle'

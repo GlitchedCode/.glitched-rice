@@ -1,6 +1,6 @@
 #!/bin/bash
 
 
-PACKAGES="vim code code i3-gaps conky cmus ranger neofetch lolcat tmux polybar"
+PACKAGES="vim code i3-gaps conky cmus ranger neofetch lolcat tmux fontawesome maim playerctl kitty rofi picom networkmanager blueman spectacle polybar"
 
-emerge -a ${PACKAGES}
+sudo emerge -a ${PACKAGES}

@@ -3,14 +3,14 @@
 RICE_HOMEDIR=".glitched-rice"
 
 if [[ -n $1 ]]; then
-	~/${RICE_HOMEDIR}/scripts/$1/
+	"$HOME/${RICE_HOMEDIR}/scripts/$1/desktop_apps.sh"
 fi
 
-if [[ ! -e .glitched-rice-installed ]]; then
-	echo source '"${RICE_HOMEDIR}/profile"' >> .profile
-	echo source '"${RICE_HOMEDIR}/alias"' >> .zshrc
-	echo source '"${RICE_HOMEDIR}/alias"' >> .bashrc
-	touch .glitched-rice-installed
+if [[ ! -e $HOME/.glitched-rice-installed ]]; then
+	echo source '"$HOME/${RICE_HOMEDIR}/profile"' >> $HOME/.profile
+	echo source '"$HOME/${RICE_HOMEDIR}/alias"' >> $HOME/.zshrc
+	echo source '"$HOME/${RICE_HOMEDIR}/alias"' >> $HOME/.bashrc
+	touch $HOME/.glitched-rice-installed
 else
 	echo "Home dotfiles already set, remove the .glitched-rice-installed file to allow the script to reinstall them."
 fi
