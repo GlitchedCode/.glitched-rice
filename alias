@@ -1,0 +1,9 @@
+alias zshconfig="vim ~/.zshrc"
+alias ohmyzshconfig="vim ~/.oh-my-zsh"
+
+alias django="./manage.py"
+alias r='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
+alias venv-activate="source bin/activate"
+alias neofetch="neofetch | lolcat"
+alias kitty_fancy="kitty zsh -c 'neofetch && zsh'"
+alias fmusic="~/.glitched-rice/scripts/fancy_music.sh"

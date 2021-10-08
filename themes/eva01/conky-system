@@ -1,0 +1,72 @@
+---- Conky settings
+conky.config = {
+	lua_load = '~/.config/conky/draw_bg.lua',
+	lua_draw_hook_pre = 'draw_bg',
+	update_interval = 1,
+	total_run_times = 0,
+	net_avg_samples = 1,
+	cpu_avg_samples = 1,
+	if_up_strictness = 'link',
+
+	imlib_cache_size = 0,
+	double_buffer = true,
+	no_buffers = true,
+
+	format_human_readable = true,
+
+	---- Text settings 
+	use_xft = true,
+	font = 'FreeNERVControl:style=bold:size=24',
+	override_utf8_locale = true,
+	text_buffer_size = 2048,
+
+	---- Window specifications
+	own_window_class = 'CONKY-SYSTEM',
+	own_window = true,
+	own_window_type = 'override',
+	own_window_transparent = true,
+	own_window_argb_visual = true,
+	own_window_argb_value = 200,
+	own_window_hints = 'undecorated,below,skip_taskbar,skip_pager',
+	xinerama_head = 0,
+	--draw_borders = true,
+	border_width = 15,
+	alignment = 'top_right',
+	gap_x = 40,
+	gap_y = 80,
+	minimum_width = 360,
+	minimum_height = 525,
+	--maximum_width 182,
+
+	--default_bar_size 60 8,
+
+	---- Graphics settings
+	draw_shades = false,
+
+	default_color = 'fee318',
+
+	color0 = 'e3c136',
+	color1 = '77507b',
+	color2 = 'e3c136',
+	color3 = 'bd2c40'
+}
+
+conky.text = [[
+${color0}${font FreeNERVControl:style=Bold:size=32}SYSTEM $stippled_hr${font}${color}
+${color0}${voffset 8}${offset 4}${font ConkyColorsLogos:size=16}l${font}${color}${voffset -16}
+${color0}${font ConkyColors:size=16}b${font}${color}
+${goto 38}${voffset -80}${color2}Kernel: ${alignr}${kernel}${color}
+${goto 38}${color2}Uptime: ${alignr}${uptime}${color}
+${voffset 6}${color0}${font ConkyColors:size=16}c${font}${voffset -9}${goto 38}${color0}CPU1: ${cpu cpu1}%${color}${font} ${alignr}${voffset 5}${color2}${cpugraph cpu1 26,120 77507B BD2C40}${color}
+${goto 38}${color0}CPU2: ${cpu cpu2}%${color}${font} ${alignr}${color2}${cpugraph cpu2 26,120 77507B BD2C40}${color}
+${goto 38}${color0}CPU3: ${cpu cpu3}%${color}${font} ${alignr}${color2}${cpugraph cpu3 26,120 77507B BD2C40}${color}
+${goto 38}${color0}CPU4: ${cpu cpu4}%${color}${font} ${alignr}${color2}${cpugraph cpu4 26,120 77507B BD2C40}${color}
+#############
+${goto 38}${color0}CPU5: ${cpu cpu5}%${color}${font} ${alignr}${color2}${cpugraph cpu5 26,120 77507B BD2C40}${color}
+${goto 38}${color0}CPU6: ${cpu cpu6}%${color}${font} ${alignr}${color2}${cpugraph cpu6 26,120 77507B BD2C40}${color}
+${goto 38}${color0}CPU7: ${cpu cpu7}%${color}${font} ${alignr}${color2}${cpugraph cpu7 26,120 77507B BD2C40}${color}
+${goto 38}${color0}CPU8: ${cpu cpu8}%${color}${font} ${alignr}${color2}${cpugraph cpu8 26,120 77507B BD2C40}${color}
+##### RAM
+${voffset 2}${color0}${font ConkyColors:size=16}g${font}${goto 38}${voffset -10}RAM: $memperc% $stippled_hr${color}
+${color0}${goto 38}${mem}/${memeasyfree}${color}
+]]
