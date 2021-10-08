@@ -3,6 +3,7 @@
 if [[ -d ~/.glitched-rice/themes/$1 ]]; then
 	mkdir -p ~/.config/i3
 	mkdir -p ~/.glitched-rice/current
+	rm -rf ~/.glitched-rice/current/*
 	mkdir -p ~/.themes
 
 	# replacing i3 config
