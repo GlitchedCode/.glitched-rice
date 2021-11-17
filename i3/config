@@ -104,7 +104,10 @@ set $ws10 "10"
 set $monitor_left HDMI-0
 set $monitor_right DP-5
 
-workspace $ws1 output $monitor_left 
+exec --no-startup-id i3-msg 'workspace $ws1: output $monitor_left; append_layout ~/.glitched-rice/i3/layouts/web.json'
+exec --no-startup-id i3-msg 'workspace $ws2: output $monitor_left; append_layout ~/.glitched-rice/i3/layouts/comms.json'
+exec --no-startup-id i3-msg 'workspace $ws3: output $monitor_right; append_layout ~/.glitched-rice/i3/layouts/term.json'
+exec --no-startup-id i3-msg 'workspace $ws4: output $monitor_right; append_layout ~/.glitched-rice/i3/layouts/media.json'
 workspace $ws2 output $monitor_left 
 workspace $ws3 output $monitor_right 
 workspace $ws4 output $monitor_right 
@@ -112,11 +115,10 @@ workspace $ws4 output $monitor_right
 # Comms
 assign [class="lightcord"] $ws2
 assign [class="telegram-desktop"] $ws2
+assign [class="Mailspring"] $ws2
+assign [class="Thunderbird"] $ws2
 
-# Web apps
-assign [window_role="browser"] $ws1
-
-# Terminals
+# Productivity
 assign [class="code-oss"] $ws3
 assign [class="Apache NetBeans IDE 12.4"] $ws3
 
@@ -125,6 +127,11 @@ assign [class="Steam"] $ws4
 for_window[class="Steam" title="Friends List"] floating enable
 assign [class="spotify"] $ws4
 assign [class="mpv"] $ws4
+
+# Web apps
+assign [class="Brave-browser"] $ws1
+assign [class="firefox"] $ws1
+
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -161,27 +168,27 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+	# These bindings trigger as soon as you enter the resize mode
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym ograve resize grow width 10 px or 10 ppt
+	# Pressing left will shrink the window’s width.
+	# Pressing right will grow the window’s width.
+	# Pressing up will shrink the window’s height.
+	# Pressing down will grow the window’s height.
+	bindsym j resize shrink width 10 px or 10 ppt
+	bindsym k resize grow height 10 px or 10 ppt
+	bindsym l resize shrink height 10 px or 10 ppt
+	bindsym ograve resize grow width 10 px or 10 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+	# same bindings, but for the arrow keys
+	bindsym Left resize shrink width 10 px or 10 ppt
+	bindsym Down resize grow height 10 px or 10 ppt
+	bindsym Up resize shrink height 10 px or 10 ppt
+	bindsym Right resize grow width 10 px or 10 ppt
 
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+	# back to normal: Enter or Escape or $mod+r
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+	bindsym $mod+r mode "default"
 }
 
 bindsym $mod+r mode "resize"
@@ -194,10 +201,14 @@ bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightne
 #bindsym XF86TouchpadToggle exec /usr/bin/toggletouchpad.sh # toggle touchpad
 
 # Media player controls
-bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
+
 
 # Plasma compatibility improvements
 for_window [window_role="pop-up"] floating enable
@@ -213,11 +224,6 @@ for_window [class="plasmashell" window_type="notification"] border none, move ri
 no_focus [class="plasmashell" window_type="notification"]
 
 # Plasma media player controls
-#bindsym XF86AudioRaiseVolume exec --no-startup-id qdbus org.kde.kglobalaccel /component/kmix invokeShortcut "increase_volume"
-#bindsym XF86AudioLowerVolume exec --no-startup-id qdbus org.kde.kglobalaccel /component/kmix invokeShortcut "decrease_volume"
-#bindsym XF86AudioMute exec --no-startup-id qdbus org.kde.kglobalaccel /component/kmix invokeShortcut "mute"
-#bindsym XF86AudioMicMute exec --no-startup-id qdbus org.kde.kglobalaccel /component/kmix invokeShortcut "mic_mute"
-
 # nvidia bullshit, i fucking hate you nvidia
 exec nvidia-settings --assign "CurrentMetaMode=DPY-4: nvidia-auto-select @1280x1024 +0+0 {ViewPortIn=1280x1024, ViewPortOut=1280x1024+0+0}, DPY-6: nvidia-auto-select @1600x900 +1280+0 {ViewPortIn=1600x900, ViewPortOut=1600x900+0+0, ForceCompositionPipeline=On, ForceFullCompositionPipeline=O}"
 
@@ -243,128 +249,37 @@ for_window [class=".*"] border pixel 3
 #set $mode_gaps_left Left Gaps: +|-|0 (local), Shift + +|-|0 (global)
 #bindsym $mod+Shift+g mode "$mode_gaps"
 
-gaps outer 3
+# Only enable gaps on a workspace when there is at least one container
+smart_gaps on
+# Only enable outer gaps when there is exactly one container
+smart_gaps inverse_outer
+# Activate smart borders (always)
+smart_borders on
+# Activate smart borders (only when there are effectively no gaps)
+smart_borders no_gaps
+
+#gaps outer 0
 gaps inner 7 
 
-mode "$mode_gaps" {
-        bindsym o      mode "$mode_gaps_outer"
-        bindsym i      mode "$mode_gaps_inner"
-        bindsym h      mode "$mode_gaps_horiz"
-        bindsym v      mode "$mode_gaps_verti"
-        bindsym t      mode "$mode_gaps_top"
-        bindsym r      mode "$mode_gaps_right"
-        bindsym b      mode "$mode_gaps_bottom"
-        bindsym l      mode "$mode_gaps_left"
-        bindsym Return mode "$mode_gaps"
-        bindsym Escape mode "default"
-}
-
-mode "$mode_gaps_outer" {
-        bindsym plus  gaps outer current plus 5
-        bindsym minus gaps outer current minus 5
-        bindsym 0     gaps outer current set 0
-
-        bindsym Shift+plus  gaps outer all plus 5
-        bindsym Shift+minus gaps outer all minus 5
-        bindsym Shift+0     gaps outer all set 0
-
-        bindsym Return mode "$mode_gaps"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_inner" {
-        bindsym plus  gaps inner current plus 5
-        bindsym minus gaps inner current minus 5
-        bindsym 0     gaps inner current set 0
-}
-mode "$mode_gaps_inner" {
-        bindsym plus  gaps inner current plus 5
-        bindsym minus gaps inner current minus 5
-        bindsym 0     gaps inner current set 0
-
-        bindsym Shift+plus  gaps inner all plus 5
-        bindsym Shift+minus gaps inner all minus 5
-        bindsym Shift+0     gaps inner all set 0
-
-        bindsym Return mode "$mode_gaps"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_horiz" {
-        bindsym plus  gaps horizontal current plus 5
-        bindsym minus gaps horizontal current minus 5
-        bindsym 0     gaps horizontal current set 0
-
-        bindsym Shift+plus  gaps horizontal all plus 5
-        bindsym Shift+minus gaps horizontal all minus 5
-        bindsym Shift+0     gaps horizontal all set 0
-
-        bindsym Return mode "$mode_gaps"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_verti" {
-        bindsym plus  gaps vertical current plus 5
-        bindsym minus gaps vertical current minus 5
-        bindsym 0     gaps vertical current set 0
-
-        bindsym Shift+plus  gaps vertical all plus 5
-        bindsym Shift+minus gaps vertical all minus 5
-        bindsym Shift+0     gaps vertical all set 0
-
-        bindsym Return mode "$mode_gaps"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_top" {
-        bindsym plus  gaps top current plus 5
-        bindsym minus gaps top current minus 5
-        bindsym 0     gaps top current set 0
-
-        bindsym Shift+plus  gaps top all plus 5
-        bindsym Shift+minus gaps top all minus 5
-        bindsym Shift+0     gaps top all set 0
-
-        bindsym Return mode "$mode_gaps"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_right" {
-        bindsym plus  gaps right current plus 5
-        bindsym minus gaps right current minus 5
-        bindsym 0     gaps right current set 0
-
-        bindsym Shift+plus  gaps right all plus 5
-        bindsym Shift+minus gaps right all minus 5
-        bindsym Shift+0     gaps right all set 0
-
-        bindsym Return mode "$mode_gaps"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_bottom" {
-        bindsym plus  gaps bottom current plus 5
-        bindsym minus gaps bottom current minus 5
-        bindsym 0     gaps bottom current set 0
-
-        bindsym Shift+plus  gaps bottom all plus 5
-        bindsym Shift+minus gaps bottom all minus 5
-        bindsym Shift+0     gaps bottom all set 0
-
-        bindsym Return mode "$mode_gaps"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_left" {
-        bindsym plus  gaps left current plus 5
-        bindsym minus gaps left current minus 5
-        bindsym 0     gaps left current set 0
-
-        bindsym Shift+plus  gaps left all plus 5
-        bindsym Shift+minus gaps left all minus 5
-        bindsym Shift+0     gaps left all set 0
-
-        bindsym Return mode "$mode_gaps"
-        bindsym Escape mode "default"
-}
-
-# autorun
+# autorun env
 exec_always picom --experimental-backends -b --config ~/.glitched-rice/picom.conf
 exec_always conky -c ~/.glitched-rice/current/conky-system
 exec_always --no-startup-id i3-msg 'workspace $ws1; exec ~/.glitched-rice/i3/i3wpd.sh'
+exec --no-startup-id lxqt-notificationd
 
 exec_always polybar -c ~/.glitched-rice/current/polybar-conf default
 exec --no-startup-id i3-msg 'workspace $ws1; exec spectacle -s'
+
+# autorun applications
+exec 'setxkbmap -layout it,us > ~/.1.out'
+exec 'setxkbmap -option "grp:shifts_toggle" >  ~/.2.out'
+exec --no-startup-id i3-msg 'workspace $ws2; exec thunderbird'
+exec --no-startup-id i3-msg 'workspace $ws2; exec lightcord'
+exec --no-startup-id i3-msg 'workspace $ws2; exec telegram-desktop'
+
+exec --no-startup-id i3-msg 'workspace $ws1; exec brave'
+
+exec --no-startup-id i3-msg 'workspace $ws4; exec kitty zsh -c "cmus"'
+exec --no-startup-id i3-msg 'workspace $ws4; exec kitty zsh -c "vis"'
+
+exec --no-startup-id i3-msg 'workspace $ws3; exec kitty zsh -c "neofetch | lolcat && zsh"'
